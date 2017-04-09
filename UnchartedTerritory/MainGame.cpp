@@ -1,8 +1,8 @@
 #include "MainGame.h"
 
 //Include files from our game engine
-#include <2DGameEngine/Errors.h>
-#include <2DGameEngine/ResourceManager.h>
+#include <GameEngine2D/Errors.h>
+#include <GameEngine2D/ResourceManager.h>
 
 #include <iostream>
 #include <string>
@@ -27,11 +27,11 @@ void MainGame::run(){
 	initSystems();
 
 	//Add a sprite
-	_sprites.push_back(new Sprite());
+	_sprites.push_back(new GameEngine2D::Sprite());
 
 	_sprites.back()->initialize(0.0f, 0.0f, 0.5f, 0.5f, "Textures/SpriteSheet/Froglvl1.png");
 
-	_sprites.push_back(new Sprite());
+	_sprites.push_back(new GameEngine2D::Sprite());
 
 	_sprites.back()->initialize(-0.5f, -0.5f, 0.5f, 0.5f, "Textures/SpriteSheet/Froglvl1.png");
 
@@ -40,14 +40,11 @@ void MainGame::run(){
 
 	
 void MainGame::initSystems(){
-	//Initialise SDL
-	SDL_Init(SDL_INIT_EVERYTHING);
-
-	//Tells opengl we want a double buffer
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); //Do this before window is created
+	
+	GameEngine2D::init();
 
 	//Use our window class to create an SDL Windown with the given properties
-	_window.createWindow(_title, _screenWidth, _screenHeight, BORDERLESS);
+	_window.createWindow(_title, _screenWidth, _screenHeight, GameEngine2D::BORDERLESS);
 
 	initShaders();
 }
@@ -122,13 +119,13 @@ void MainGame::drawGame(){
 	glActiveTexture(GL_TEXTURE0);
 
 	//Get the unform location for texture
-	GLuint textureLocation = ResourceManager::getLocation("myTexture", &_colourProgram);
+	GLuint textureLocation = GameEngine2D::ResourceManager::getLocation("myTexture", &_colourProgram);
 
 	//Send 1 interger to gpu 
 	glUniform1i(textureLocation, 0);
 
 	//Get the uniform location for time
-	GLuint timeLocation = ResourceManager::getLocation("time", &_colourProgram);
+	GLuint timeLocation = GameEngine2D::ResourceManager::getLocation("time", &_colourProgram);
 
 	//Send 1 float to gpu
 	glUniform1f(timeLocation, _time);

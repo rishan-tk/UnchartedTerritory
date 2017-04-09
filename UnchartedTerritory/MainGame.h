@@ -1,10 +1,12 @@
 #pragma once
 
 //Include files from our game engine
-#include <2DGameEngine/Sprite.h>
-#include <2DGameEngine/GLSLProgram.h>
-#include <2DGameEngine/GLTexture.h>
-#include <2DGameEngine/Window.h>
+#include <GameEngine2D/GameEngine2D.h>
+#include <GameEngine2D/Sprite.h>
+#include <GameEngine2D/GLSLProgram.h>
+#include <GameEngine2D/GLTexture.h>
+#include <GameEngine2D/Window.h>
+
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>

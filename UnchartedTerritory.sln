@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2DGameEngine", "2DGameEngine\2DGameEngine.vcxproj", "{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnchartedTerritory", "UnchartedTerritory\UnchartedTerritory.vcxproj", "{5558767F-BB36-4FA3-8621-ECE50D5D99BB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine2D", "GameEngine2D\GameEngine2D.vcxproj", "{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +15,12 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Debug|Win32.Build.0 = Debug|Win32
+		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Debug|x64.ActiveCfg = Debug|Win32
+		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Release|Win32.ActiveCfg = Release|Win32
+		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Release|Win32.Build.0 = Release|Win32
+		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Release|x64.ActiveCfg = Release|Win32
 		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}.Debug|Win32.Build.0 = Debug|Win32
 		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}.Debug|x64.ActiveCfg = Debug|x64
@@ -23,12 +29,6 @@ Global
 		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}.Release|Win32.Build.0 = Release|Win32
 		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}.Release|x64.ActiveCfg = Release|x64
 		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}.Release|x64.Build.0 = Release|x64
-		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Debug|Win32.Build.0 = Debug|Win32
-		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Debug|x64.ActiveCfg = Debug|Win32
-		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Release|Win32.ActiveCfg = Release|Win32
-		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Release|Win32.Build.0 = Release|Win32
-		{5558767F-BB36-4FA3-8621-ECE50D5D99BB}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
