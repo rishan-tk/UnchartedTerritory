@@ -39,7 +39,7 @@ private:
 
 	void getFPS();
 
-	Window _window;
+	GameEngine2D::Window _window;
 
 	//Window title
 	char* _title;
@@ -51,9 +51,9 @@ private:
 	//Keep track of game state
 	GameState _gameState;
 
-	std::vector<Sprite*> _sprites;
+	std::vector<GameEngine2D::Sprite*> _sprites;
 
-	GLSLProgram _colourProgram;
+	GameEngine2D::GLSLProgram _colourProgram;
 
 	float _time;
 	

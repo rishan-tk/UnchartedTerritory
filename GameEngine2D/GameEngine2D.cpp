@@ -6,6 +6,9 @@
 namespace GameEngine2D {
 
 	int GameEngine2D::init() {
+
+		//TODO: Error checking
+
 		//Initialise SDL
 		SDL_Init(SDL_INIT_EVERYTHING);
 
