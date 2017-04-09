@@ -1,13 +1,14 @@
 #include "MainGame.h"
-#include "Errors.h"
-#include "ResourceManager.h"
+
+//Include files from our game engine
+#include <2DGameEngine/Errors.h>
+#include <2DGameEngine/ResourceManager.h>
 
 #include <iostream>
 #include <string>
 
 //Constructor used to initialize variables
 MainGame::MainGame() : 
-	_window(nullptr), 
 	_title("Uncharted Territory"), 
 	_screenWidth(1280), 
 	_screenHeight(720), 
@@ -45,35 +46,8 @@ void MainGame::initSystems(){
 	//Tells opengl we want a double buffer
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); //Do this before window is created
 
-	//Create and open a SDL window
-	_window = SDL_CreateWindow(_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
-
-	//Error checking on window
-	if(_window == nullptr)
-		fatalError("SDL Window could not be created!");
-
-	//Creating a context 
-	SDL_GLContext glContext = SDL_GL_CreateContext(_window);
-
-	//Error checking on context
-	if(glContext == nullptr)
-		fatalError("SDL_GL context could not be created!");
-
-	//Initialize glew 
-	GLenum error = glewInit(); //glewInit() throws a GLenum
-
-	//Error checking on glew
-	if(error != GLEW_OK)
-		fatalError("Could not initialize glew!");
-
-	//Print out the OpenGL version
-	printf("**** OpenGL Version: %s ****\n", glGetString(GL_VERSION));
-
-	//Set background colour
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	//Turns off V-Sync
-	SDL_GL_SetSwapInterval(0);
+	//Use our window class to create an SDL Windown with the given properties
+	_window.createWindow(_title, _screenWidth, _screenHeight, BORDERLESS);
 
 	initShaders();
 }
@@ -107,7 +81,7 @@ void MainGame::gameLoop(){
 		//Limit the fps to max fps
 		//Check if fps needs limiting
 		if(1000.0f / _maxFPS > frameTicks)
-			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+			SDL_Delay((GLuint)(1000.0f / _maxFPS - frameTicks));
 		
 	}
 }
@@ -141,6 +115,7 @@ void MainGame::drawGame(){
 	//Clears the colour buffer and depth buffer with bitwise or
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	//Enable the shader
 	_colourProgram.useProgram();
 
 	//Get the first texture
@@ -158,17 +133,19 @@ void MainGame::drawGame(){
 	//Send 1 float to gpu
 	glUniform1f(timeLocation, _time);
 
-	for (int i = 0; i < (int)_sprites.size(); i++) {
-		//Draw sprites
+	for (int i = 0; i < (int)_sprites.size(); i++) 
 		_sprites[i]->draw();
-	}
+	
 
 	//Unbind the player texture before finishing drawing
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	//Disable the shader
 	_colourProgram.unuseProgram();
 
-	//Pushes everything to window
-	SDL_GL_SwapWindow(_window);
+	//Swap the buffers
+	_window.swapBuffer();
+
 }
 
 void MainGame::getFPS(){

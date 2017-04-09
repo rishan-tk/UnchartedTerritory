@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Sprite.h"
-#include "GLSLProgram.h"
-#include "GLTexture.h"
-
+//Include files from our game engine
+#include <2DGameEngine/Sprite.h>
+#include <2DGameEngine/GLSLProgram.h>
+#include <2DGameEngine/GLTexture.h>
+#include <2DGameEngine/Window.h>
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 #include <vector>
 
 enum class GameState{PLAY, EXIT};
-
 
 class MainGame
 {
@@ -37,8 +37,7 @@ private:
 
 	void getFPS();
 
-	//Hold pointer to window
-	SDL_Window* _window;
+	Window _window;
 
 	//Window title
 	char* _title;

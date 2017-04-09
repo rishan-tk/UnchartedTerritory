@@ -146,6 +146,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureCache.cpp" />
     <ClCompile Include="UniformLocationCache.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Errors.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="TextureCache.h" />
     <ClInclude Include="UniformLocationCache.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
