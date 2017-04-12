@@ -6,6 +6,7 @@
 #include <GameEngine2D/GLSLProgram.h>
 #include <GameEngine2D/GLTexture.h>
 #include <GameEngine2D/Window.h>
+#include <GameEngine2D/Camera2D.h>
 
 
 #include <SDL/SDL.h>
@@ -54,6 +55,7 @@ private:
 	std::vector<GameEngine2D::Sprite*> _sprites;
 
 	GameEngine2D::GLSLProgram _colourProgram;
+	GameEngine2D::Camera2D _camera;
 
 	float _time;
 	

@@ -16,6 +16,7 @@ MainGame::MainGame() :
 	_time(0.0f),
 	_maxFPS(60.0f)
 {
+	//_camera.init(_screenWidth, _screenHeight);
 }
 
 
@@ -64,6 +65,9 @@ void MainGame::gameLoop(){
 
 		processInput();
 		_time += 0.01f;
+
+		//_camera.update();
+
 		drawGame();
 		getFPS();
 
