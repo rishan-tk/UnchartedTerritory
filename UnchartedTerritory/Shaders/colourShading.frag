@@ -12,6 +12,7 @@ out vec4 colour;
 //Represents time and variable will change accordingly
 uniform float time;
 
+
 //A variable to hold the texture
 uniform sampler2D myTexture;
 
@@ -19,6 +20,6 @@ void main(){
 
 	vec4 textureColour = texture(myTexture, fragmentUV);
 
-	colour = textureColour * fragmentColour * time;
+	colour = textureColour * fragmentColour;
 	
 }

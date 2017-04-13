@@ -16,11 +16,11 @@ namespace GameEngine2D {
 
 		void update();
 
-		//Setters
-		void setPosition(glm::vec2& newPosition) { _position = newPosition; }
-		void setScale(float newScale) { _scale = newScale; }
+		//Mutators(Setters)
+		void setPosition(glm::vec2& newPosition) { _position = newPosition; _updateMatrix = true; }
+		void setScale(float newScale) { _scale = newScale; _updateMatrix = true; }
 
-		//Getters
+		//Accessors(Getters)
 		glm::vec2 getPosition() { return _position; }
 		float getScale() { return _scale; }
 		glm::mat4 getCameraMatrix() { return _cameraMatrix; }

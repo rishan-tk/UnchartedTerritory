@@ -9,9 +9,12 @@ out vec4 fragmentColour;
 out vec2 fragmentPosition;
 out vec2 fragmentUV;
 
+//Represents the orthographic projection matrix
+uniform mat4 projMatrix;
+
 void main(){
 	//Set the x, y position on the screen
-	gl_Position.xy = vertexPosition;
+	gl_Position.xy = (projMatrix * vec4(vertexPosition, 0.0, 1.0)).xy;
 	
 	//Set z to 0 since 2D
 	gl_Position.z = 0.0;

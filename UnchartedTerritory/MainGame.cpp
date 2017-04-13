@@ -16,7 +16,7 @@ MainGame::MainGame() :
 	_time(0.0f),
 	_maxFPS(60.0f)
 {
-	//_camera.init(_screenWidth, _screenHeight);
+	_camera.init(_screenWidth, _screenHeight);
 }
 
 
@@ -30,11 +30,11 @@ void MainGame::run(){
 	//Add a sprite
 	_sprites.push_back(new GameEngine2D::Sprite());
 
-	_sprites.back()->initialize(0.0f, 0.0f, 0.5f, 0.5f, "Textures/SpriteSheet/Froglvl1.png");
+	_sprites.back()->initialize(0.0f, 0.0f, _screenWidth/2.0f, (float)(_screenHeight), "Textures/SpriteSheet/Froglvl1.png");
 
 	_sprites.push_back(new GameEngine2D::Sprite());
 
-	_sprites.back()->initialize(-0.5f, -0.5f, 0.5f, 0.5f, "Textures/SpriteSheet/Froglvl1.png");
+	_sprites.back()->initialize(_screenWidth/2.0f, 0.0f, _screenWidth/2.0f, (float)(_screenHeight), "Textures/SpriteSheet/Froglvl1.png");
 
 	gameLoop();
 }
@@ -66,7 +66,7 @@ void MainGame::gameLoop(){
 		processInput();
 		_time += 0.01f;
 
-		//_camera.update();
+		_camera.update();
 
 		drawGame();
 		getFPS();
@@ -103,6 +103,24 @@ void MainGame::processInput(){
 			case SDL_MOUSEMOTION:
 				//std::cout << "X: " << events.motion.x << " Y: " << events.motion.y << std::endl;
 				break;
+
+			case SDL_KEYDOWN:
+				//Check which key is pressed
+				switch(events.key.keysym.sym){
+					case SDLK_w:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, 1.0f));
+						break;
+					case SDLK_s:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -1.0f));
+						break;
+					case SDLK_a:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(-1.0f, 0.0f));
+						break;
+					case SDLK_d:
+						_camera.setPosition(_camera.getPosition() + glm::vec2(1.0f, 0.0f));
+						break;
+				}
+				break;
 		}
 
 	}
@@ -129,10 +147,19 @@ void MainGame::drawGame(){
 	glUniform1i(textureLocation, 0);
 
 	//Get the uniform location for time
-	GLuint timeLocation = GameEngine2D::ResourceManager::getLocation("time", &_colourProgram);
+	//GLuint timeLocation = GameEngine2D::ResourceManager::getLocation("time", &_colourProgram);
 
 	//Send 1 float to gpu
-	glUniform1f(timeLocation, _time);
+	//glUniform1f(timeLocation, _time);
+
+	//Get the uniform location for the projection matrix
+	GLuint projMatrixLocation = GameEngine2D::ResourceManager::getLocation("projMatrix", &_colourProgram);
+
+	//Set the camera matrix
+	glm::mat4 cameraMatrix = _camera.getCameraMatrix();
+
+	//Send a mat4 to the gpu
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 	for (int i = 0; i < (int)_sprites.size(); i++) 
 		_sprites[i]->draw();
