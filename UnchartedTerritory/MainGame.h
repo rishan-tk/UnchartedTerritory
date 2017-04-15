@@ -7,11 +7,11 @@
 #include <GameEngine2D/GLTexture.h>
 #include <GameEngine2D/Window.h>
 #include <GameEngine2D/Camera2D.h>
+#include <GameEngine2D/SpriteBatch.h>
 
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
-#include <vector>
 
 enum class GameState{PLAY, EXIT};
 
@@ -52,10 +52,9 @@ private:
 	//Keep track of game state
 	GameState _gameState;
 
-	std::vector<GameEngine2D::Sprite*> _sprites;
-
 	GameEngine2D::GLSLProgram _colourProgram;
 	GameEngine2D::Camera2D _camera;
+	GameEngine2D::SpriteBatch _spriteBatch;
 
 	float _time;
 	

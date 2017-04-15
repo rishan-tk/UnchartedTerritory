@@ -27,15 +27,6 @@ MainGame::~MainGame()
 void MainGame::run(){
 	initSystems();
 
-	//Add a sprite
-	_sprites.push_back(new GameEngine2D::Sprite());
-
-	_sprites.back()->initialize(0.0f, 0.0f, _screenWidth/2.0f, (float)(_screenHeight), "Textures/SpriteSheet/Froglvl1.png");
-
-	_sprites.push_back(new GameEngine2D::Sprite());
-
-	_sprites.back()->initialize(_screenWidth/2.0f, 0.0f, _screenWidth/2.0f, (float)(_screenHeight), "Textures/SpriteSheet/Froglvl1.png");
-
 	gameLoop();
 }
 
@@ -48,6 +39,9 @@ void MainGame::initSystems(){
 	_window.createWindow(_title, _screenWidth, _screenHeight, GameEngine2D::BORDERLESS);
 
 	initShaders();
+
+	//Initialize spritebatch
+	_spriteBatch.init();
 }
 
 void MainGame::initShaders(){
@@ -90,6 +84,8 @@ void MainGame::gameLoop(){
 void MainGame::processInput(){
 	SDL_Event events;
 
+	const float CAMERA_SPEED = 20.0f;
+
 	//Check if there is an event
 	while(SDL_PollEvent(&events)){
 		//Process the event
@@ -108,19 +104,27 @@ void MainGame::processInput(){
 				//Check which key is pressed
 				switch(events.key.keysym.sym){
 					case SDLK_w:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, 1.0f));
+						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
 						break;
 					case SDLK_s:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -1.0f));
+						_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
 						break;
 					case SDLK_a:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(-1.0f, 0.0f));
+						_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
 						break;
 					case SDLK_d:
-						_camera.setPosition(_camera.getPosition() + glm::vec2(1.0f, 0.0f));
+						_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 						break;
+					case SDLK_q:
+						_camera.setScale(_camera.getScale() + 1.0f);
+						break;
+					case SDLK_e:
+						_camera.setScale(_camera.getScale() - 1.0f);
+						break;
+
 				}
 				break;
+
 		}
 
 	}
@@ -161,9 +165,28 @@ void MainGame::drawGame(){
 	//Send a mat4 to the gpu
 	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
-	for (int i = 0; i < (int)_sprites.size(); i++) 
-		_sprites[i]->draw();
 	
+	_spriteBatch.begin();
+
+	glm::vec4 position(0.0f, 0.0f, 50.0f, 50.0f);
+
+	glm::vec4 uv(0.0f, 2.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f);
+
+	GameEngine2D::GLTexture texture = GameEngine2D::ResourceManager::getTexture("Textures/SpriteSheet/Froglvl1.png");
+
+	GameEngine2D::Colour colour;
+	colour.r = 255;
+	colour.g = 255;
+	colour.b = 255;
+	colour.a = 255;
+
+	for (int i = 0; i < 1000; i++) 
+		_spriteBatch.draw(position, uv, texture.id, 0.0f, colour);
+	
+
+	_spriteBatch.end();
+
+	_spriteBatch.renderBatch();
 
 	//Unbind the player texture before finishing drawing
 	glBindTexture(GL_TEXTURE_2D, 0);

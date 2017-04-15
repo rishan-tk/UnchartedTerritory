@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnchartedTerritory", "UnchartedTerritory\UnchartedTerritory.vcxproj", "{5558767F-BB36-4FA3-8621-ECE50D5D99BB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4} = {E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameEngine2D", "GameEngine2D\GameEngine2D.vcxproj", "{E55FEC63-D975-43A9-A4E1-EF9E1009FEC4}"
 EndProject

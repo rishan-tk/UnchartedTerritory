@@ -34,8 +34,6 @@ namespace GameEngine2D {
 			return tempTexture;
 		}
 
-		std::cout << "Used cached texture\n";
-
 		//Texture is contained in the map
 		return textureIterator->second; //Iterator contains a pair, return the value
 	}

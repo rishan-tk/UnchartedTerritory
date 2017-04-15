@@ -20,6 +20,6 @@ void main(){
 
 	vec4 textureColour = texture(myTexture, fragmentUV);
 
-	colour = textureColour * fragmentColour;
+	colour = textureColour * fragmentColour ;
 	
 }
