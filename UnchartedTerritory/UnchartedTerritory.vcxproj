@@ -76,6 +76,14 @@
   <ItemGroup>
     <ClInclude Include="MainGame.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="Shaders\colourShading.frag" />
+    <None Include="Shaders\colourShading.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\SpriteSheet\Froglvl1.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
