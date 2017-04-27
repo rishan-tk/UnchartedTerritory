@@ -99,7 +99,7 @@ namespace GameEngine2D {
 		vertices[currentVertex++] = _glyphs[0]->topRight;
 		vertices[currentVertex++] = _glyphs[0]->topLeft;
 
-		for (int currentGlyph = 1; currentGlyph < _glyphs.size(); currentGlyph++) {
+		for (int currentGlyph = 1; currentGlyph < (int)_glyphs.size(); currentGlyph++) {
 			//If different texture create a new render batch
 			if (_glyphs[currentGlyph]->textureID != _glyphs[currentGlyph - 1]->textureID)
 				_renderBatches.emplace_back(currentVertex, 6, _glyphs[currentGlyph]->textureID);
