@@ -8,6 +8,7 @@
 #include <GameEngine2D/Window.h>
 #include <GameEngine2D/Camera2D.h>
 #include <GameEngine2D/SpriteBatch.h>
+#include <GameEngine2D/InputManager.h>
 
 
 #include <SDL/SDL.h>
@@ -55,6 +56,7 @@ private:
 	GameEngine2D::GLSLProgram _colourProgram;
 	GameEngine2D::Camera2D _camera;
 	GameEngine2D::SpriteBatch _spriteBatch;
+	GameEngine2D::InputManager _inputManager;
 
 	float _time;
 	
