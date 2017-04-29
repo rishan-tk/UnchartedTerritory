@@ -9,6 +9,7 @@
 #include <GameEngine2D/Camera2D.h>
 #include <GameEngine2D/SpriteBatch.h>
 #include <GameEngine2D/InputManager.h>
+#include <GameEngine2D/Timing.h>
 
 
 #include <SDL/SDL.h>
@@ -39,7 +40,6 @@ private:
 
 	void drawGame();
 
-	void getFPS();
 
 	GameEngine2D::Window _window;
 
@@ -57,12 +57,13 @@ private:
 	GameEngine2D::Camera2D _camera;
 	GameEngine2D::SpriteBatch _spriteBatch;
 	GameEngine2D::InputManager _inputManager;
+	GameEngine2D::FPSLimiter _fpsLimiter;
 
 	float _time;
 	
 	float _maxFPS;
 	float _fps;
-	GLuint _frameTime;
+
 
 };
 

@@ -58,6 +58,10 @@ namespace GameEngine2D {
 		//Turns off V-Sync
 		SDL_GL_SetSwapInterval(0);
 
+		//Enable alpha blending
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		//Return 0 if no errors
 		return 0;
 	}

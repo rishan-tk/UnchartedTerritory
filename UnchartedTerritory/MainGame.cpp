@@ -42,6 +42,9 @@ void MainGame::initSystems(){
 
 	//Initialize spritebatch
 	_spriteBatch.init();
+
+	//Initialise our FPS Limiter
+	_fpsLimiter.init(_maxFPS);
 }
 
 void MainGame::initShaders(){
@@ -55,7 +58,7 @@ void MainGame::initShaders(){
 void MainGame::gameLoop(){
 	while(_gameState != GameState::EXIT){
 		//Used for frame time measuring 
-		float startTicks = (float)SDL_GetTicks();
+		_fpsLimiter.begin();
 
 		processInput();
 		_time += 0.01f;
@@ -63,21 +66,15 @@ void MainGame::gameLoop(){
 		_camera.update();
 
 		drawGame();
-		getFPS();
+
+		_fps = _fpsLimiter.end();
 
 		//Static variable to tell us when to print fps
 		static int counter = 0;
+
 		//Print out the fps
-		if(counter++ % 10 == 0)
-			std::cout << _fps << std::endl;
-
-		float frameTicks = (float)SDL_GetTicks() - startTicks;
-
-		//Limit the fps to max fps
-		//Check if fps needs limiting
-		if(1000.0f / _maxFPS > frameTicks)
-			SDL_Delay((GLuint)(1000.0f / _maxFPS - frameTicks));
-		
+		if(counter++ % 500 == 0)
+			std::cout << _fps << std::endl;	
 	}
 }
 
@@ -85,7 +82,7 @@ void MainGame::processInput(){
 	SDL_Event events;
 
 	const float CAMERA_SPEED = 2.0f;
-	const float SCALE_SPEED = 0.5f;
+	const float SCALE_SPEED = 0.1f;
 
 	//Check if there is an event
 	while(SDL_PollEvent(&events)){
@@ -96,17 +93,25 @@ void MainGame::processInput(){
 				_gameState = GameState::EXIT;
 				break;
 
-			//Track mouse motion - might be used later in game
-			case SDL_MOUSEMOTION:
-				//std::cout << "X: " << events.motion.x << " Y: " << events.motion.y << std::endl;
-				break;
-
 			case SDL_KEYDOWN:
 				_inputManager.pressKey(events.key.keysym.sym);
 				break;
 
 			case SDL_KEYUP:
 				_inputManager.releaseKey(events.key.keysym.sym);
+				break;
+
+			case SDL_MOUSEBUTTONDOWN:
+				_inputManager.pressKey(events.button.button);
+				break;
+
+			case SDL_MOUSEBUTTONUP:
+				_inputManager.releaseKey(events.button.button);
+				break;
+
+			//Track mouse motion 
+			case SDL_MOUSEMOTION:
+				_inputManager.setMouseCoords((float)events.motion.x, (float)events.motion.y);
 				break;
 
 		}
@@ -124,9 +129,17 @@ void MainGame::processInput(){
 		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 	
 	if (_inputManager.isKeyPressed(SDLK_q)) 
-		_camera.setScale(_camera.getScale() + SCALE_SPEED);
+		_camera.setScale(_camera.getScale() * (1 + SCALE_SPEED));
 	else if (_inputManager.isKeyPressed(SDLK_e)) 
-		_camera.setScale(_camera.getScale() - SCALE_SPEED);
+		_camera.setScale(_camera.getScale() * (1 - SCALE_SPEED));
+
+	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
+		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
+		mouseCoords = _camera.convertScreentoWorldCoords(mouseCoords);
+		std::cout << mouseCoords.x << " / " << mouseCoords.y << std::endl;
+
+	}
+
 	
 		
 
@@ -182,8 +195,8 @@ void MainGame::drawGame(){
 	colour.b = 255;
 	colour.a = 255;
 
-	for (int i = 0; i < 1000; i++) 
-		_spriteBatch.draw(position, uv, texture.id, 0.0f, colour);
+	
+	_spriteBatch.draw(position, uv, texture.id, 0.0f, colour);
 	
 
 	_spriteBatch.end();
@@ -198,51 +211,5 @@ void MainGame::drawGame(){
 
 	//Swap the buffers
 	_window.swapBuffer();
-
-}
-
-void MainGame::getFPS(){
-	//Number of frames we are going to average over
-	static const int NUM_SAMPLES = 10;
-
-	//Frame time buffer
-	static GLuint frameTimes[NUM_SAMPLES];
-
-	static GLuint currentFrame = 0;
-
-	//Get previous and current ticks;
-	static GLuint prevTicks = SDL_GetTicks();
-
-	GLuint currentTicks;
-	currentTicks = SDL_GetTicks();
-
-	//Calculate the frametime
-	_frameTime = currentTicks - prevTicks;
-	frameTimes[currentFrame%NUM_SAMPLES] = _frameTime;
-
-	//Set prevTicks
-	prevTicks = currentTicks;
-
-	GLuint count;
-
-	if(currentFrame++ < NUM_SAMPLES)
-		count = currentFrame;
-	else
-		count = NUM_SAMPLES;
-	
-
-	float frameTimeAvg = 0;
-
-	for(int i = 0; i < (int)count; i++)
-		frameTimeAvg += (float)frameTimes[i];
-	
-	//Get the average frame time
-	frameTimeAvg /= count;
-
-	//As long as frame time average is greater than 0 calculate the FPS
-	if (frameTimeAvg > 0)
-		_fps = 1000.0f / frameTimeAvg;
-	else
-		_fps = 60.0f;
 
 }

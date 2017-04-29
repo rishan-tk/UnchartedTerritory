@@ -16,14 +16,17 @@ namespace GameEngine2D {
 
 		void update();
 
+		glm::vec2 convertScreentoWorldCoords(glm::vec2 screenCoords);
+
 		//Mutators(Setters)
 		void setPosition(glm::vec2& newPosition) { _position = newPosition; _updateMatrix = true; }
 		void setScale(float newScale) { _scale = newScale; _updateMatrix = true; }
 
 		//Accessors(Getters)
-		glm::vec2 getPosition() { return _position; }
-		float getScale() { return _scale; }
-		glm::mat4 getCameraMatrix() { return _cameraMatrix; }
+		glm::vec2 getPosition() const;
+		float getScale() const;
+
+		glm::mat4 getCameraMatrix() const { return _cameraMatrix; }
 
 	private:
 		int _screenWidth, _screenHeight;
@@ -36,4 +39,6 @@ namespace GameEngine2D {
 
 	};
 
+	inline glm::vec2 Camera2D::getPosition() const { return _position; }
+	inline float Camera2D::getScale() const { return _scale; }
 }
