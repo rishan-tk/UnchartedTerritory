@@ -37,7 +37,7 @@ namespace GameEngine2D {
 		createRenderBatches();
 	}
 
-	void SpriteBatch::draw(const glm::vec4& destinationRect, const glm::vec4& uvRect, GLuint textureID, float depth, const Colour& colour){
+	void SpriteBatch::draw(const glm::vec4& destinationRect, const glm::vec4& uvRect, GLuint textureID, float depth, const ColourRGBA8& colour){
 		Glyph* newGlyph = new Glyph;
 		newGlyph->textureID = textureID;
 		newGlyph->depth = depth;

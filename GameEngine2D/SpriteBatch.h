@@ -52,7 +52,7 @@ namespace GameEngine2D {
 
 		//This will add what you want to draw to the renderBatch
 		//The z and w component of destinationRect and uvRect represent width and height respectively 
-		void draw(const glm::vec4& destinationRect, const glm::vec4& uvRect, GLuint textureID, float depth, const Colour& colour);
+		void draw(const glm::vec4& destinationRect, const glm::vec4& uvRect, GLuint textureID, float depth, const ColourRGBA8& colour);
 
 		//This will render all the sprites to the screen
 		void renderBatch();

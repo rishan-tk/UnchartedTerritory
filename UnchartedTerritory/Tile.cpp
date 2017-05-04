@@ -35,11 +35,8 @@ void Tile::draw(GameEngine2D::SpriteBatch & spriteBatch){
 			break;
 	}
 
-	GameEngine2D::Colour colour;
-	colour.r = 255;
-	colour.g = 255;
-	colour.b = 255;
-	colour.a = 255;
+	GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
+
 
 	spriteBatch.draw(posAndSize, uv, textureID, 0.0f, colour);
 }

@@ -34,11 +34,8 @@ Level::Level(const std::string & fileName)
 
 			glm::vec2 position(column * ENTITY_DIMENSION, (MAP_DIMENSION - row - 1) * ENTITY_DIMENSION);
 			glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
-			GameEngine2D::Colour colour;
-			colour.r = 255;
-			colour.g = 255;
-			colour.b = 255;
-			colour.a = 255;
+			GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
+
 
 			switch (_levelData[row][column]) {
 				case 'P':

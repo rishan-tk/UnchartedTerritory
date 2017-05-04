@@ -7,12 +7,21 @@ namespace GameEngine2D {
 
 
 	struct Position {
+		Position() : x(0), y(0){}
+		
+		Position(float a, float b) : x(a), y(b){}
+		
 		float x;
 		float y;
 	};
 
-	//Represents rgba colour with 4 bytes
-	struct Colour {
+	//Represents rgba colour
+	struct ColourRGBA8 {
+		ColourRGBA8() : r(0), g(0), b(0), a(0){}
+
+		ColourRGBA8(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) 
+			: r(red), g(green), b(blue), a(alpha) {}
+
 		GLubyte r;
 		GLubyte g;
 		GLubyte b;
@@ -20,6 +29,10 @@ namespace GameEngine2D {
 	};
 
 	struct UV {
+		UV() : u(0), v(0){}
+
+		UV(float U, float V) : u(U), v(V){}
+
 		float u;
 		float v;
 	};
@@ -28,7 +41,7 @@ namespace GameEngine2D {
 
 		Position position;
 
-		Colour colour;
+		ColourRGBA8 colour;
 
 		//UV texture coordinates
 		UV uv;

@@ -204,11 +204,7 @@ void MainGame::drawGame(){
 	//glm::vec4 uv(0.0f, 2.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f);
 
 
-	GameEngine2D::Colour colour;
-	colour.r = 255;
-	colour.g = 255;
-	colour.b = 255;
-	colour.a = 255;
+	GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
 
 	_levels[_currentLevel]->draw(); ///< Draws to its own spriteBatch
 
