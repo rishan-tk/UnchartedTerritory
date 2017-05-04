@@ -28,6 +28,9 @@ namespace GameEngine2D {
 		if (currentFlags & BORDERLESS)
 			flags |= SDL_WINDOW_BORDERLESS;
 
+		if (currentFlags & WINDOWED)
+			flags |= SDL_WINDOW_SHOWN;
+
 		//Create and open a SDL window
 		_window = SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, flags);
 

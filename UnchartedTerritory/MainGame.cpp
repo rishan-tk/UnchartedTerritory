@@ -10,44 +10,56 @@
 //Constructor used to initialize variables
 MainGame::MainGame() : 
 	_title("Uncharted Territory"), 
-	_screenWidth(1280), 
-	_screenHeight(720), 
-	_gameState(GameState::PLAY), 
-	_time(0.0f),
-	_maxFPS(60.0f)
+	_screenDimensions(1280.0f, 720.0f),
+	_gameState(GameState::PLAY),
+	_maxFPS(60.0f),
+	_currentLevel(0)
 {
-	_camera.init(_screenWidth, _screenHeight);
+	_camera.initialise(_screenDimensions);
 }
 
 
-MainGame::~MainGame()
-{
+MainGame::~MainGame(){
+
+	for (int i = 0; i < (int)_levels.size(); i++)
+		delete _levels[i];
+
 }
 
 void MainGame::run(){
-	initSystems();
+	initialiseSystems();
+
+	initialiseLevel(0);
 
 	gameLoop();
 }
 
 	
-void MainGame::initSystems(){
+void MainGame::initialiseSystems(){
 	
-	GameEngine2D::init();
+	GameEngine2D::initialise();
 
 	//Use our window class to create an SDL Windown with the given properties
-	_window.createWindow(_title, _screenWidth, _screenHeight, GameEngine2D::BORDERLESS);
+	_window.createWindow(_title, (int)_screenDimensions.x, (int)_screenDimensions.y, GameEngine2D::WINDOWED);
 
-	initShaders();
+	initialiseShaders();
 
 	//Initialize spritebatch
-	_spriteBatch.init();
+	_spriteBatch.initialise();
 
 	//Initialise our FPS Limiter
-	_fpsLimiter.init(_maxFPS);
+	_fpsLimiter.initialise(_maxFPS);
 }
 
-void MainGame::initShaders(){
+void MainGame::initialiseLevel(int level){
+	_currentLevel = level;
+	_levels.push_back(new Level("Levels/level1.txt")); ///< Add the first Level
+	
+	_player.emplace_back(new Player(_levels[_currentLevel]->getPlayerStartPosition())); ///< Add 1 Player
+	_player[0]->initialise(5.0f, &_inputManager); ///< Set the player speed and pass in the adress of inputManager
+}
+
+void MainGame::initialiseShaders(){
 	_colourProgram.compileShaders("Shaders/colourShading.vert", "Shaders/colourShading.frag");
 	_colourProgram.addAttribute("vertexPosition");
 	_colourProgram.addAttribute("vertexColour");
@@ -55,15 +67,33 @@ void MainGame::initShaders(){
 	_colourProgram.linkShaders();
 }
 
+void MainGame::updateBullets(){
+	for (int i = 0; i < (int)_bullets.size();) {
+		if (_bullets[i].update() == true) {
+			_bullets[i] = _bullets.back();
+			_bullets.pop_back();
+		}
+		else
+			i++;
+	}
+}
+
 void MainGame::gameLoop(){
-	while(_gameState != GameState::EXIT){
+	while(_gameState == GameState::PLAY){
 		//Used for frame time measuring 
 		_fpsLimiter.begin();
 
 		processInput();
-		_time += 0.01f;
+		
+		_player[0]->update(_levels[_currentLevel]->getTiles()); ///< Update player 1
 
+		_camera.setPosition(_player[0]->getPosition());
 		_camera.update();
+
+		
+		updateBullets(); ///< Update the bullets
+
+
 
 		drawGame();
 
@@ -113,36 +143,29 @@ void MainGame::processInput(){
 			case SDL_MOUSEMOTION:
 				_inputManager.setMouseCoords((float)events.motion.x, (float)events.motion.y);
 				break;
-
 		}
-
 	}
 
-	if (_inputManager.isKeyPressed(SDLK_w)) 
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, CAMERA_SPEED));
-	 if (_inputManager.isKeyPressed(SDLK_s)) 
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0f, -CAMERA_SPEED));
-	
-	if (_inputManager.isKeyPressed(SDLK_a)) 
-		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
-	 if (_inputManager.isKeyPressed(SDLK_d)) 
-		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
-	
-	if (_inputManager.isKeyPressed(SDLK_q)) 
+	//Scaling
+	if (_inputManager.isKeyPressed(SDLK_q))
 		_camera.setScale(_camera.getScale() * (1 + SCALE_SPEED));
-	else if (_inputManager.isKeyPressed(SDLK_e)) 
+	else if (_inputManager.isKeyPressed(SDLK_e))
 		_camera.setScale(_camera.getScale() * (1 - SCALE_SPEED));
 
 	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT)) {
 		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.convertScreentoWorldCoords(mouseCoords);
-		std::cout << mouseCoords.x << " / " << mouseCoords.y << std::endl;
 
+		glm::vec2 playerPosition((_player[0]->getPosition().x)+(ENTITY_DIMENSION/2),
+								(_player[0]->getPosition().y)+(ENTITY_DIMENSION/2));
+
+		glm::vec2 direction(mouseCoords - playerPosition);
+		direction = glm::normalize(direction);
+
+		_bullets.emplace_back(playerPosition, direction, 2.0f, 1000);
 	}
 
 	
-		
-
 }
 
 void MainGame::drawGame(){
@@ -165,12 +188,6 @@ void MainGame::drawGame(){
 	//Send 1 interger to gpu 
 	glUniform1i(textureLocation, 0);
 
-	//Get the uniform location for time
-	//GLuint timeLocation = GameEngine2D::ResourceManager::getLocation("time", &_colourProgram);
-
-	//Send 1 float to gpu
-	//glUniform1f(timeLocation, _time);
-
 	//Get the uniform location for the projection matrix
 	GLuint projMatrixLocation = GameEngine2D::ResourceManager::getLocation("projMatrix", &_colourProgram);
 
@@ -183,11 +200,9 @@ void MainGame::drawGame(){
 	
 	_spriteBatch.begin();
 
-	glm::vec4 position(0.0f, 0.0f, 50.0f, 50.0f);
 
-	glm::vec4 uv(0.0f, 2.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f);
+	//glm::vec4 uv(0.0f, 2.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f);
 
-	GameEngine2D::GLTexture texture = GameEngine2D::ResourceManager::getTexture("Textures/SpriteSheet/Froglvl1.png");
 
 	GameEngine2D::Colour colour;
 	colour.r = 255;
@@ -195,10 +210,16 @@ void MainGame::drawGame(){
 	colour.b = 255;
 	colour.a = 255;
 
-	
-	_spriteBatch.draw(position, uv, texture.id, 0.0f, colour);
-	
+	_levels[_currentLevel]->draw(); ///< Draws to its own spriteBatch
 
+	//Draw all the players
+	for (int i = 0; i < (int)_player.size(); i++)
+		_player[i]->draw(_spriteBatch);
+	
+	//Draw all the bullets
+	for (int i = 0; i < (int)_bullets.size(); i++) 
+		_bullets[i].draw(_spriteBatch);
+	
 	_spriteBatch.end();
 
 	_spriteBatch.renderBatch();

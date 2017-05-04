@@ -8,7 +8,7 @@ namespace GameEngine2D {
 
 	}
 
-	void FPSLimiter::init(float maxFPS){
+	void FPSLimiter::initialise(float maxFPS){
 		setMaxFPS(maxFPS);
 	}
 

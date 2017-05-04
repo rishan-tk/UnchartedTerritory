@@ -5,7 +5,7 @@
 
 namespace GameEngine2D {
 
-	int GameEngine2D::init() {
+	int GameEngine2D::initialise() {
 
 		//TODO: Error checking
 

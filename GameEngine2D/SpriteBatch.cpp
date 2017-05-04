@@ -15,7 +15,7 @@ namespace GameEngine2D {
 	{
 	}
 
-	void SpriteBatch::init(){
+	void SpriteBatch::initialise(){
 		createVertexArray();
 	}
 

@@ -11,11 +11,14 @@
 #include <GameEngine2D/InputManager.h>
 #include <GameEngine2D/Timing.h>
 
+#include "Bullet.h"
+#include "Level.h"
+#include "Player.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
-enum class GameState{PLAY, EXIT};
+enum class GameState{PLAY, EXIT, MAIN_MENU, PAUSE};
 
 class MainGame
 {
@@ -30,9 +33,13 @@ public:
 
 private:
 	//Initialise the game 
-	void initSystems();
+	void initialiseSystems();
 
-	void initShaders();
+	void initialiseLevel(int level);
+
+	void initialiseShaders();
+
+	void updateBullets();
 
 	void gameLoop();
 
@@ -40,15 +47,13 @@ private:
 
 	void drawGame();
 
-
 	GameEngine2D::Window _window;
 
 	//Window title
 	char* _title;
 
 	//Screen width and height
-	int _screenWidth;
-	int _screenHeight;
+	glm::vec2 _screenDimensions;
 
 	//Keep track of game state
 	GameState _gameState;
@@ -59,7 +64,14 @@ private:
 	GameEngine2D::InputManager _inputManager;
 	GameEngine2D::FPSLimiter _fpsLimiter;
 
-	float _time;
+	std::vector<Bullet> _bullets;
+
+	std::vector<Level*> _levels;
+
+	std::vector<Player*> _player;
+
+
+	int _currentLevel;
 	
 	float _maxFPS;
 	float _fps;

@@ -4,8 +4,7 @@
 namespace GameEngine2D {
 
 	Camera2D::Camera2D() : 
-		_screenWidth(500),
-		_screenHeight(500),
+		_screenDimensions(500.0f, 500.0f),
 		_updateMatrix(true),
 		_scale(1.0f),
 		_position(0.0f, 0.0f),
@@ -19,17 +18,16 @@ namespace GameEngine2D {
 	{
 	}
 
-	void Camera2D::init(int screenWidth, int screenHeight){
-		_screenWidth = screenWidth;
-		_screenHeight = screenHeight;
-		_orthoMatrix = glm::ortho(0.0f, (float)_screenWidth, 0.0f, (float)_screenHeight);
+	void Camera2D::initialise(glm::vec2 screenDimensions){
+		_screenDimensions = screenDimensions;
+		_orthoMatrix = glm::ortho(0.0f, _screenDimensions.x, 0.0f, _screenDimensions.y);
 	}
 
 	void Camera2D::update(){
 
 		if (_updateMatrix) {
 			//Camera Translation 
-			glm::vec3 translate(-_position.x + _screenWidth/2.0f, -_position.y + _screenHeight/2.0f, 0.0f);
+			glm::vec3 translate(-_position.x + _screenDimensions.x/2.0f, -_position.y + _screenDimensions.y/2.0f, 0.0f);
 			//Translate the camera matrix by our position
 			_cameraMatrix = glm::translate(_orthoMatrix, translate);
 
@@ -44,8 +42,10 @@ namespace GameEngine2D {
 	}
 
 	glm::vec2 Camera2D::convertScreentoWorldCoords(glm::vec2 screenCoords){
+		//Invert y direction
+		screenCoords.y = _screenDimensions.y - screenCoords.y;
 		//Set it so (0,0) is the center
-		screenCoords -= glm::vec2(_screenWidth / 2, _screenHeight / 2);
+		screenCoords -= glm::vec2(_screenDimensions.x / 2, _screenDimensions.y / 2);
 		//Scale the coordinates
 		screenCoords /= _scale;
 		//Translate with camera position

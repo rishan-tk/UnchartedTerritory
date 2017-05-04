@@ -6,7 +6,7 @@ namespace GameEngine2D {
 	public: 
 		FPSLimiter();
 
-		void init(float maxFPS);
+		void initialise(float maxFPS);
 
 		void setMaxFPS(float maxFPS);
 

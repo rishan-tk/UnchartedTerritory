@@ -9,7 +9,7 @@ namespace GameEngine2D {
 
 	//Enum for creating window flags 
 	//Assign the flags to separate bits so we can combine flags
-	enum WindowFlags { INVISIBLE = 0x1, FULLSCREEN = 0x2, BORDERLESS = 0x4 };
+	enum WindowFlags { INVISIBLE = 0x1, FULLSCREEN = 0x2, BORDERLESS = 0x4 , WINDOWED = 0x8};
 
 	class Window
 	{

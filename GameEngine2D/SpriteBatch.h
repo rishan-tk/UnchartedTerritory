@@ -43,7 +43,7 @@ namespace GameEngine2D {
 		~SpriteBatch();
 
 
-		void init();
+		void initialise();
 
 		//Get SpriteBatch ready for rendering
 		void begin(GlyphSortType sortType = GlyphSortType::TEXTURE);
