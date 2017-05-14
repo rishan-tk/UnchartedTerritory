@@ -9,9 +9,10 @@
 #include <GameEngine2D/Camera2D.h>
 #include <GameEngine2D/SpriteBatch.h>
 #include <GameEngine2D/InputManager.h>
-#include <GameEngine2D/Timing.h>
+#include <GameEngine2D/FPSLimiter.h>
 
 #include "Bullet.h"
+#include "Coin.h"
 #include "Level.h"
 #include "Player.h"
 
@@ -39,13 +40,15 @@ private:
 
 	void initialiseShaders();
 
-	void updateBullets();
+	void updateEntities(const glm::vec2& playerPosition);
 
 	void gameLoop();
 
 	void processInput();
 
 	void drawGame();
+
+	void setCameraPosition();
 
 	GameEngine2D::Window _window;
 
@@ -65,6 +68,8 @@ private:
 	GameEngine2D::FPSLimiter _fpsLimiter;
 
 	std::vector<Bullet> _bullets;
+
+	std::vector<Coin*> _coins;
 
 	std::vector<Level*> _levels;
 

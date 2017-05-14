@@ -3,11 +3,13 @@
 #include <GameEngine2D/ResourceManager.h>
 
 
-Bullet::Bullet(glm::vec2 position, glm::vec2 direction, float speed, int lifeTime){
-	_lifeTime = lifeTime;
+Bullet::Bullet(glm::vec2 position, glm::vec2 velocity, float speed, int lifeTime){
 	_position = position;
-	_direction = direction;
+	_gravity = 0.5f;;
+	_velocity = velocity;
 	_speed = speed;
+	_lifeTime = lifeTime;
+	_currentState = BULLET;
 }
 
 Bullet::~Bullet()
@@ -15,7 +17,7 @@ Bullet::~Bullet()
 }
 
 void Bullet::draw(GameEngine2D::SpriteBatch& spriteBatch){
-	glm::vec4 posAndSize(_position, 10.0f, 10.0f);
+	glm::vec4 posAndSize(_position, BULLET_DIMENSION, BULLET_DIMENSION);
 
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
 
@@ -27,12 +29,15 @@ void Bullet::draw(GameEngine2D::SpriteBatch& spriteBatch){
 
 }
 
-bool Bullet::update(){
-	_position += _direction * _speed;
-	_lifeTime--;
+bool Bullet::update(const std::vector<Tile>& tiles) {
 
-	if (!_lifeTime)
-		return true;
-	else
+	if (!collideWithLevel(tiles, _position, _currentState)){
+		_position += (_velocity * _speed);
+		_lifeTime--;
 		return false;
+	}else {
+		_lifeTime = 0;
+		return true;
+	}
+
 }

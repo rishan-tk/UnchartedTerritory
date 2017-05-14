@@ -10,9 +10,12 @@ namespace GameEngine2D {
 
 		void setMaxFPS(float maxFPS);
 
-		void begin();
+		float begin();
 
 		float end();
+
+		float getFPS() { return _fps; }
+
 	private:
 
 		void calculateFPS();
@@ -22,6 +25,7 @@ namespace GameEngine2D {
 		float _fps;
 
 		unsigned int _startTicks;
+		unsigned int _endTicks;
 	};
 
 };

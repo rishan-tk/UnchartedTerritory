@@ -1,10 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(glm::vec2 position, TileType tile) : _isColliable(false){
-
-	_position = position;//+ glm::vec2(ENTITY_DIMENSION/2, ENTITY_DIMENSION/2);
-	_tile = tile;
-
+Tile::Tile(glm::vec2 position, TileType tile) : _isCollidable(false), _position(position), _tile(tile){
 }
 
 
@@ -24,19 +20,19 @@ void Tile::draw(GameEngine2D::SpriteBatch & spriteBatch){
 	switch (_tile) {
 		case EARTH:
 			textureID = GameEngine2D::ResourceManager::getTexture("Textures/Tiles/Earth.png").id;
+			_isCollidable = false;
 			break;
 		case ROAD:
 			textureID = GameEngine2D::ResourceManager::getTexture("Textures/Tiles/Road.png").id;
-			_isColliable = true;
+			_isCollidable = true;
 			break;
 		case GRASS:
 			textureID = GameEngine2D::ResourceManager::getTexture("Textures/Tiles/Grass.png").id;
-			_isColliable = true;
+			_isCollidable = true;
 			break;
 	}
 
 	GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
-
 
 	spriteBatch.draw(posAndSize, uv, textureID, 0.0f, colour);
 }

@@ -1,6 +1,6 @@
 #include "picoPNG.h"
 
-//Include all the files in 2DGameEngine namespace
+
 namespace GameEngine2D {
 
 	/*

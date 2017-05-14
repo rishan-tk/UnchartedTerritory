@@ -26,8 +26,6 @@ namespace GameEngine2D {
 			//Insert the location into the map
 			_uniformLocationCache.emplace(locationOf, tempLocation);
 
-			std::cout << "Loaded location into cache\n";
-
 			//Return the texture
 			return tempLocation;
 		}

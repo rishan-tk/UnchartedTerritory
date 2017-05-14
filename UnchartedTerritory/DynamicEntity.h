@@ -11,8 +11,9 @@ public:
 	virtual void draw(GameEngine2D::SpriteBatch& spriteBatch);
 
 protected:
-	int _lifeTime;
 	float _speed;
-	glm::vec2 _direction;
+	glm::vec2 _velocity;
+	glm::vec2 _velocityGoal;
+	float _gravity;
 };
 

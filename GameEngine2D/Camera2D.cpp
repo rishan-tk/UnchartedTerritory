@@ -54,4 +54,8 @@ namespace GameEngine2D {
 		return screenCoords;
 	}
 
+	bool Camera2D::isBoxInView(const glm::vec2 & position, const glm::vec2 & dimension){
+		return true;
+	}
+
 }

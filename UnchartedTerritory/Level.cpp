@@ -16,7 +16,7 @@ Level::Level(const std::string & fileName)
 
 	std::string tempString;
 	//Throw away first word into a string and read in the number
-	file >> tempString >> _numHunters;
+	file >> tempString >> _numHunters >> tempString >> _numCoins;
 
 	//Discard the rest of the line
 	std::getline(file, tempString);
@@ -31,21 +31,15 @@ Level::Level(const std::string & fileName)
 	//Render all the tiles and invert the y-axis 
 	for (int row = 0; row < (int)_levelData.size(); row++) {
 		for (int column = 0; column < (int)_levelData[row].size(); column++) {
-
 			glm::vec2 position(column * ENTITY_DIMENSION, (MAP_DIMENSION - row - 1) * ENTITY_DIMENSION);
-			glm::vec4 uvRect(0.0f, 0.0f, 1.0f, 1.0f);
-			GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
-
 
 			switch (_levelData[row][column]) {
 				case 'P':
 					_playerStartPosition = position;
-					//_spriteBatch.draw(destRect, uvRect, GameEngine2D::ResourceManager::getTexture("Textures/SpriteSheet/Froglvl1.png").id, 0.0f, colour);
 					_tiles.emplace_back(position, EARTH);
 					break;
 				case 'H':
 					_hunterStartPostion.emplace_back(position);
-					//_spriteBatch.draw(destRect, uvRect, GameEngine2D::ResourceManager::getTexture("Textures/SpriteSheet/Froglvl1.png").id, 0.0f, colour);
 					_tiles.emplace_back(position, EARTH);
 					break;
 				case '.':
@@ -56,6 +50,10 @@ Level::Level(const std::string & fileName)
 					break;
 				case 'G':
 					_tiles.emplace_back(position, GRASS);
+					break;
+				case 'C':
+					_coinStartPositions.emplace_back(position);
+					_tiles.emplace_back(position, EARTH);
 					break;
 				default:
 					GameEngine2D::fatalError("Unexpected symbol " + _levelData[row][column]);
@@ -81,6 +79,6 @@ void Level::draw(){
 
 
 void Level::drawTiles(){
-	for (int i = 0; i < (int)_tiles.size(); i++)
-		_tiles[i].draw(_spriteBatch);
+	for (Tile& t : _tiles)
+		t.draw(_spriteBatch);
 }

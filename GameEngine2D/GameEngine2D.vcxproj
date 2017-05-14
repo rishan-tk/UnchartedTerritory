@@ -74,6 +74,10 @@
     <IncludePath>$(SolutionDir)deps/include/;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)deps/include/;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
@@ -148,8 +152,9 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteBatch.cpp" />
+    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="TextureCache.cpp" />
-    <ClCompile Include="Timing.cpp" />
+    <ClCompile Include="FPSLimiter.cpp" />
     <ClCompile Include="UniformLocationCache.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -166,8 +171,9 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteBatch.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="TextureCache.h" />
-    <ClInclude Include="Timing.h" />
+    <ClInclude Include="FPSLimiter.h" />
     <ClInclude Include="UniformLocationCache.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />

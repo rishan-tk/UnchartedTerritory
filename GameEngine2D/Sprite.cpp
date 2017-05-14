@@ -32,7 +32,7 @@ namespace GameEngine2D {
 		_texture = ResourceManager::getTexture(texturePath);
 
 		//If vertex buffer object hasnt been generated
-		if (_vboID == 0) {
+		if (!_vboID) {
 			//Generate buffer and assign it to an id
 			glGenBuffers(1, &_vboID);
 		}

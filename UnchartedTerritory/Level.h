@@ -29,6 +29,8 @@ public:
 
 	glm::vec2 getPlayerStartPosition() const { return _playerStartPosition; }
 	const std::vector<Tile>& getTiles() { return _tiles; }
+	int getNoCoins() const { return _numCoins; }
+	glm::vec2 getCoinStartPosition(int index) const { return _coinStartPositions[index]; }
 
 private:
 	void drawTiles();
@@ -37,9 +39,11 @@ private:
 
 	int _numPlayers;
 	int _numHunters;
+	int _numCoins;
 
 	glm::vec2 _playerStartPosition;
 	std::vector<glm::vec2> _hunterStartPostion;
+	std::vector<glm::vec2> _coinStartPositions;
 
 	std::vector<Tile> _tiles;
 

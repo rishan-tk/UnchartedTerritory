@@ -28,8 +28,6 @@ namespace GameEngine2D {
 			//Insert the texture into the map
 			_textureCache.emplace(filePath, tempTexture);
 
-			std::cout << "Loaded texture into cache\n";
-
 			//Return the texture
 			return tempTexture;
 		}

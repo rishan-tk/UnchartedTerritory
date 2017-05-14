@@ -1,4 +1,4 @@
-#include "Timing.h"
+#include "FPSLimiter.h"
 
 #include <SDL/SDL.h>
 
@@ -16,20 +16,21 @@ namespace GameEngine2D {
 		_maxFPS = maxFPS;
 	}
 
-	void FPSLimiter::begin(){
-		_startTicks = (float)SDL_GetTicks();
+	float FPSLimiter::begin(){
+		_startTicks = SDL_GetTicks();
+		return (float)_startTicks;
 	}
 
 	float FPSLimiter::end(){
 		calculateFPS();
 
-		float frameTicks = (float)SDL_GetTicks() - _startTicks;
+		_endTicks = SDL_GetTicks() - _startTicks;
 
 		//Limit the fps to max fps if it needs limiting
-		if (1000.0f / _maxFPS > frameTicks)
-			SDL_Delay((Uint32)(1000.0f / _maxFPS - frameTicks));
+		if (1000.0f / _maxFPS > _endTicks)
+			SDL_Delay((Uint32)(1000.0f / _maxFPS - _endTicks));
 
-		return _fps;
+		return (float)_endTicks;
 	}
 
 	void FPSLimiter::calculateFPS(){
