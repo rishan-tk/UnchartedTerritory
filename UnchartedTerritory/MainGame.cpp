@@ -8,44 +8,41 @@
 #include <string>
 
 //Constructor used to initialize variables
-MainGame::MainGame() : 
-	_title("Uncharted Territory"), 
-	_screenDimensions(1280.0f, 720.0f),
-	_gameState(GameState::PLAY),
-	_maxFPS(60.0f),
-	_currentLevel(0)
-{
-	_camera.initialise(_screenDimensions);
+MainGame::MainGame(){
 }
 
 
 MainGame::~MainGame(){
-
 	for (int i = 0; i < (int)_levels.size(); i++)
 		delete _levels[i];
-
+	for (int i = 0; i < (int)_player.size(); i++)
+		delete _player[i];
 }
 
 void MainGame::run(){
 	initialiseSystems();
-
 	initialiseLevel(0);
-
 	gameLoop();
 }
 
 	
 void MainGame::initialiseSystems(){
-	
 	GameEngine2D::initialise();
 
-	//Use our window class to create an SDL Window with the given properties
-	_window.createWindow(_title, (int)_screenDimensions.x, (int)_screenDimensions.y, GameEngine2D::WINDOWED);
+	_window.createWindow(_title, (int)_screenDimensions.x, (int)_screenDimensions.y, GameEngine2D::WINDOWED); ///< Use our window class to create an SDL Window with the given properties
 
 	initialiseShaders();
 
+	_camera.initialise(_screenDimensions);
+	_hudCamera.initialise(_screenDimensions);
+	_hudCamera.setPosition(glm::vec2(_screenDimensions.x / 2, _screenDimensions.y / 2)); ///< Set the position of the hud
+
 
 	_spriteBatch.initialise(); ///< Initialise our spritebatch variable
+
+	_fontSpriteBatch.initialise();
+
+	_spriteFont = new GameEngine2D::SpriteFont("Fonts/arialbold.ttf", 32);
 
 	_fpsLimiter.initialise(_maxFPS); ///< Initialise out fps limiter to max fps(60)
 }
@@ -57,8 +54,11 @@ void MainGame::initialiseLevel(int level){
 
 	_levels.emplace_back(new Level(levelFile)); ///< Add the current Level
 
+	//Add the coins to the level
 	for (int i = 0; i < _levels[_currentLevel]->getNoCoins(); i++)
 		_coins.emplace_back(new Coin(_levels[_currentLevel]->getCoinStartPosition(i)));
+
+	_door.initialise(_levels[_currentLevel]->getDoorStartPosition(), (int)_coins.size()); ///< Add the exit door to the level
 	
 	_player.emplace_back(new Player(_levels[_currentLevel]->getPlayerStartPosition())); ///< Add 1 Player
 	_player[0]->initialise(10.0f, 10.0f, &_inputManager); ///< Set the player speed, gravity and pass in the address of inputManager
@@ -72,7 +72,7 @@ void MainGame::initialiseShaders(){
 	_colourProgram.linkShaders();
 }
 
-void MainGame::updateEntities(const glm::vec2& playerPosition){
+void MainGame::updateEntities(){
 	//Update bullets
 	for (int i = 0; i < (int)_bullets.size(); i++) {
 		for (int j = 0; j < (int)_coins.size(); j++) {
@@ -91,15 +91,20 @@ void MainGame::updateEntities(const glm::vec2& playerPosition){
 
 	//Check if player is colliding with coins
 	for (int i = 0; i < (int)_coins.size(); i++) {
-		if (_coins[i]->update(playerPosition)) {
+		if (_coins[i]->update(_player[0]->getPosition())) {
 			_coins[i] = _coins.back();
 			_coins.pop_back();
 		}
 	}
+
+	_door.update((int)_coins.size(), _player[0]->getPosition());
+
+	if(_door.isColliding())
+		_gameState = GameState::WON;///< Update the doors lifetime
 }
 
 void MainGame::gameLoop(){
-
+	//Used to get delta time
 	float prevTime = 0;
 	float currentTime = (float)SDL_GetTicks();
 
@@ -121,10 +126,10 @@ void MainGame::gameLoop(){
 		_player[0]->update(_levels[_currentLevel]->getTiles(), deltaTime);
 		
 		setCameraPosition();
-
 		_camera.update();
+		_hudCamera.update();
 	
-		updateEntities(_player[0]->getPosition()); ///< Update the bullets
+		updateEntities();
 
 		drawGame();
 
@@ -139,12 +144,21 @@ void MainGame::gameLoop(){
 		if(counter++ % 500 == 0)
 			std::cout << _fps << std::endl;	
 	}
+
+	while (_gameState == GameState::WON) {
+		_player.pop_back();
+		_inputManager.update();
+
+		processInput();
+
+		drawGame();
+		if(_inputManager.isKeyPressed(SDLK_SPACE))
+			_gameState = GameState::EXIT;
+	}
 }
 
 void MainGame::processInput(){
 	SDL_Event events;
-
-	const float SCALE_SPEED = 0.1f;
 
 	//Check if there is an event
 	while(SDL_PollEvent(&events)){
@@ -189,7 +203,7 @@ void MainGame::processInput(){
 		glm::vec2 direction(mouseCoords - playerPosition);
 		direction = glm::normalize(direction);
 
-		_bullets.emplace_back(playerPosition, direction, 2.0f, 1000);
+		_bullets.emplace_back(playerPosition, direction, 5.0f, 1000);
 	}
 
 	
@@ -227,27 +241,33 @@ void MainGame::drawGame(){
 	//Begin drawing to the sprite batch
 	_spriteBatch.begin();
 
-	//glm::vec4 uv(0.0f, 2.0f/3.0f, 1.0f/3.0f, 1.0f/3.0f);
-
 	_levels[_currentLevel]->draw(); ///< Draws to its own spriteBatch
-
-	//Draw all the players
-	for (int i = 0; i < (int)_player.size(); i++)
-		_player[i]->draw(_spriteBatch);
-	
-	//Draw all the bullets
-	for (int i = 0; i < (int)_bullets.size(); i++) 
-		_bullets[i].draw(_spriteBatch);
 
 	//Draw all the coins
 	for (int i = 0; i < (int)_coins.size(); i++)
 		_coins[i]->draw(_spriteBatch);
+
+	//Draw the exit door
+	_door.draw(_spriteBatch);
+
+	//Draw all the players
+	for (int i = 0; i < (int)_player.size(); i++)
+		_player[i]->draw(_spriteBatch);
+
+	//Draw all the bullets
+	for (int i = 0; i < (int)_bullets.size(); i++)
+		_bullets[i].draw(_spriteBatch);
 	
 	//Finish drawing to the sprite batch
 	_spriteBatch.end();
 
 	//Render the batches
 	_spriteBatch.renderBatch();
+
+	if (_gameState == GameState::PLAY)
+		drawHud();
+	else if (_gameState == GameState::WON)
+		drawEnd();
 
 	//Unbind the player texture before finishing drawing
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -257,6 +277,60 @@ void MainGame::drawGame(){
 
 	//Swap the buffers
 	_window.swapBuffer();
+
+}
+
+void MainGame::drawHud(){
+	char buffer[256];
+
+	//Get the uniform location for the projection matrix
+	GLuint projMatrixLocation = GameEngine2D::ResourceManager::getLocation("projMatrix", &_colourProgram);
+
+	//Set the camera matrix
+	glm::mat4 cameraMatrix = _hudCamera.getCameraMatrix();
+
+	//Send a mat4 to the gpu
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	_fontSpriteBatch.begin();
+
+	//Fill buffer with string
+	sprintf_s(buffer, "Coins remaining: %d/%d", (int)_coins.size(), _levels[_currentLevel]->getNoCoins());
+
+	GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
+
+	_spriteFont->draw(_fontSpriteBatch, buffer, glm::vec2(0.0f, 0.0f), glm::vec2(1.0f), 0.0f, colour);
+
+	_fontSpriteBatch.end();
+
+	_fontSpriteBatch.renderBatch();
+}
+
+void MainGame::drawEnd(){
+
+	char buffer[256];
+
+	//Get the uniform location for the projection matrix
+	GLuint projMatrixLocation = GameEngine2D::ResourceManager::getLocation("projMatrix", &_colourProgram);
+
+	//Set the camera matrix
+	glm::mat4 cameraMatrix = _hudCamera.getCameraMatrix();
+
+	//Send a mat4 to the gpu
+	glUniformMatrix4fv(projMatrixLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	_fontSpriteBatch.begin();
+
+	//Fill buffer with string
+	sprintf_s(buffer, "You have completed the level!\nPress Space to exit!");
+
+	GameEngine2D::ColourRGBA8 colour(255, 255, 255, 255);
+
+	_spriteFont->draw(_fontSpriteBatch, buffer, glm::vec2(200.0f, 200.0f), glm::vec2(2.0f), 0.0f, colour);
+
+	_fontSpriteBatch.end();
+
+	_fontSpriteBatch.renderBatch();
 
 }
 

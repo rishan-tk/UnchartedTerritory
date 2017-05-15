@@ -55,6 +55,10 @@ Level::Level(const std::string & fileName)
 					_coinStartPositions.emplace_back(position);
 					_tiles.emplace_back(position, EARTH);
 					break;
+				case 'D':
+					_doorStartPosition = position;
+					_tiles.emplace_back(position, EARTH);
+					break;
 				default:
 					GameEngine2D::fatalError("Unexpected symbol " + _levelData[row][column]);
 			}

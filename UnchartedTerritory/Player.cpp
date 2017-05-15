@@ -29,7 +29,7 @@ Player::~Player(){
 void Player::initialise(float speed, float gravity, GameEngine2D::InputManager* inputManager){
 	_speed = speed;
 	_inputManager = inputManager;
-	_jumpSpeed = 64*2;
+	_jumpSpeed = 64*2+32;
 	_gravity = -gravity;
 }
 
@@ -94,30 +94,33 @@ void Player::update(const std::vector<Tile>& tiles, float deltaTime) {
 	//Moving left
 	if (_inputManager->isKeyDown(SDLK_a) && _movementState != RUNNING) {
 		_velocityGoal.x = -_speed;
-		if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState) && _movementState == STANDING) {
-			move(deltaTime);
-			_movementState = RUNNING;
-			_direction = -1;
-		}
-		else if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) {
-			move(deltaTime);
-		}
-		/*else {
-			_velocityGoal.x = 0;
-			_movementState = FALLING;
-		}*/
-		else if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState) && _movementState == FALLING) {
-			move(deltaTime);
-			_movementState = FALLING;
-		}
-		else
-			_movementState = FALLING;
+		_direction = -1;
 
-	}
-	else if (_inputManager->isKeyDown(SDLK_a) && _movementState == JUMPING) {
-		
-		
-	
+		switch (_movementState) {
+			case STANDING:
+				if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) {
+					move(deltaTime);
+					_movementState = RUNNING;
+				}
+				else {
+					_velocityGoal.x = 0;
+				}
+				break;
+			case JUMPING:
+				if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) 
+					move(deltaTime);
+				else {
+					_velocityGoal.x = 0;
+					_movementState = FALLING;
+				}
+				break;
+			case FALLING:
+				if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) 
+					move(deltaTime);
+				else 
+					_velocityGoal.x = 0;
+				break;
+		}			
 	}
 	else if (_inputManager->isKeyReleased(SDLK_a) && _movementState == RUNNING) {
 		_movementState = STANDING;
@@ -125,29 +128,36 @@ void Player::update(const std::vector<Tile>& tiles, float deltaTime) {
 
 	//Moving right
 	if (_inputManager->isKeyDown(SDLK_d) && _movementState != RUNNING) {
-		_velocityGoal.x = _speed, 0.0f;
-		if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState) && _movementState == STANDING) {
-			move(deltaTime);
-			_movementState = RUNNING;
-			_direction = 1;
-		}
-		else if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState) && _movementState == JUMPING) {
-			move(deltaTime);
-		}
-		else if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState) && _movementState == FALLING) {
-			move(deltaTime);
-			_movementState = FALLING;
-		}
-		else
-			_movementState = FALLING;
-		
+		_velocityGoal.x = _speed;
+		_direction = 1;
+
+		switch (_movementState) {
+		case STANDING:
+			if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) {
+				move(deltaTime);
+				_movementState = RUNNING;
+			}
+			else {
+				_velocityGoal.x = 0;
+			}
+			break;
+		case JUMPING:
+			if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) 
+				move(deltaTime);
+			else {
+				_velocityGoal.x = 0;
+				_movementState = FALLING;
+			}
+			break;
+		case FALLING:
+			if (!collideWithLevel(tiles, _position + _velocityGoal, _currentState)) 
+				move(deltaTime);
+			else 
+				_velocityGoal.x = 0;
+			
+			break;
+		}		
 	}
-	else if (_inputManager->isKeyDown(SDLK_d) && _movementState == JUMPING) {
-
-
-
-	}
-	
 	else if (_inputManager->isKeyReleased(SDLK_d) && _movementState == RUNNING) {
 		_movementState = STANDING;
 	}
@@ -199,6 +209,7 @@ void Player::update(const std::vector<Tile>& tiles, float deltaTime) {
 		case JUMPING:
 			//Update the position
 			_position += _velocity;
+			move(deltaTime);
 
 			if (!collideWithLevel(tiles, _position + _velocity, _currentState)) {
 				if (_velocityGoal.y > _velocity.y && numJumps < 2) { ///< If player is going towards jump location and player can still jump
@@ -219,7 +230,7 @@ void Player::update(const std::vector<Tile>& tiles, float deltaTime) {
 
 		case FALLING:
 			//Check if we are above ground level
-			if (_position.y > _groundHeight) {
+ 			if (_position.y > _groundHeight) {
 				_velocityGoal.y = _gravity;
 				move(deltaTime);
 
@@ -232,11 +243,14 @@ void Player::update(const std::vector<Tile>& tiles, float deltaTime) {
 					_movementState = STANDING;
 				}
 			}
-			else
+			else {
 				_movementState = STANDING;
+			}
 
 			break;
 	}
+
+
 
 }
 

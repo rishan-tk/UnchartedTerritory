@@ -17,7 +17,7 @@ void Entity::draw(GameEngine2D::SpriteBatch & spriteBatch){
 
 //Bounding Box Collision Detection
 bool Entity::checkIfColliding(const glm::vec2& position1, const glm::vec2& position2, const float DIMENSION){
-	//If on of the conditions are true, they are not colliding (tweaking numbers for more precise collisions)
+	//If one of the conditions are true, they are not colliding (tweaking numbers for more precise collisions)
 	if (((position1.x + DIMENSION) < position2.x + 10
 		|| (position2.x + TILE_DIMENSION) - 10 < position1.x
 		|| (position1.y + DIMENSION) < position2.y + 8

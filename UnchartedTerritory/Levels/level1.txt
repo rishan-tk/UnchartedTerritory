@@ -1,11 +1,11 @@
-Hunters: 0 Coins: 3
+Hunters: 0 Coins: 5
 RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-R................................................R
+R................................P....C..C.C.C..DR
 RC...........................GGGGGGGGGGGGGGGGGGGGR
 RGGGGGGGGGGGG.......GGGGGGGGGG...................R
 R....GGGGGGGGGGG.................................R
 R.........GGGGGGGG...............................R
-R..C.........GGGGGGGG............................R
+R............GGGGGGGG............................R
 RGGGGG..........GGGGGGGGGGG......................R
 R....GGG........................GGGGGGGGGGGG.....R
 R....GGGGGGG..................GGGGGGG............R
@@ -14,11 +14,11 @@ R.....................GGGGGGGGG..................R
 R.................GGGGGG.........................R
 R.............GGGGGGGG...........................R
 R.............GGGGGG...........GGGGGGGG..........R
-RGGGG.....GGGGGGGGGGGGGGGGGGGGGG............GGGGGR
-R..GGGG...................................GGGGGGGR
-R....GGGG..............................GGGGGGGGGGR
-R......GGGG.........................GGGGGGGGGGGGGR
-R........GGGGGG..................GGGGGGGGGGGGGGGGR
+R.........GGGGGGGGGGGGGGGGGGGGGG............GGGGGR
+RGGGGG....................................GGGGGGGR
+RGGGGG.................................GGGGGGGGGGR
+RGGGGGGGG...........................GGGGGGGGGGGGGR
+RGGGGGGGGGGGGGG..................GGGGGGGGGGGGGGGGR
 R...........GGGGGGG......GGGGGGGGGGGGGGGGGGGGGGGGR
 R..............GGGGGG............................R
 R................GGGGGGG.........................R
@@ -38,14 +38,14 @@ RGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..................R
 R...................................GGGGGGGGGGGGGR
 R...............................GGGGGG...........R
 R...........................GGGGGGGG.............R
-R................................................R
+R..........................GG....................R
 R................................................R
 R............GGGGGGGGGGGGG.......................R
-R......................GGGGGGGGGGGGG.............R
+R......................GGGGGGGGGGGGGGGG..........R
 R................................................R
 R.........................................GGGGGGGR
 R......................GGGGGGGGGGGGGGGGGGGGG.....R
 R..................GGGGG.........................R
 R.......GGGGGGGGGGGGG............................R
-RP...........................................C...R
+R................................................R
 RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR

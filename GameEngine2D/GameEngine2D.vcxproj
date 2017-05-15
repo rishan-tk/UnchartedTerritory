@@ -152,6 +152,7 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="SpriteBatch.cpp" />
+    <ClCompile Include="SpriteFont.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="TextureCache.cpp" />
     <ClCompile Include="FPSLimiter.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="SpriteBatch.h" />
+    <ClInclude Include="SpriteFont.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="TextureCache.h" />
     <ClInclude Include="FPSLimiter.h" />
