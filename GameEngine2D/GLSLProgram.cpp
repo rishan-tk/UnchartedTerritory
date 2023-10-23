@@ -2,6 +2,7 @@
 #include "Errors.h"
 
 #include <fstream>
+#include <sstream>
 #include <vector>
 
 //Include all the files in 2DGameEngine namespace
@@ -16,7 +17,7 @@ namespace GameEngine2D {
 	{
 	}
 
-	void GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath) {
+	void GLSLProgram::compileShaders(const std::string& shaderFilePath) {
 
 		_programID = glCreateProgram();
 
@@ -34,8 +35,11 @@ namespace GameEngine2D {
 		if (_fragmentShaderID == 0)
 			fatalError("Fragment shader failed to be created!");
 
-		compileShader(vertexShaderFilePath, _vertexShaderID);
-		compileShader(fragmentShaderFilePath, _fragmentShaderID);
+
+		ShaderProgramSource source = readShaderFile(shaderFilePath);
+
+		compileShader(source.VertexSource, _vertexShaderID);
+		compileShader(source.FragmentSource, _fragmentShaderID);
 
 	}
 
@@ -103,24 +107,8 @@ namespace GameEngine2D {
 			glDisableVertexAttribArray(i);
 	}
 
-	void GLSLProgram::compileShader(const std::string& filePath, GLuint id) {
-		std::ifstream vertexFile(filePath);
-
-		//Error check if shaders opened
-		if (vertexFile.fail()) {
-			perror(filePath.c_str());
-			fatalError("Failed to open " + filePath);
-		}
-
-		std::string fileContents = "";
-		std::string line;
-
-		while (std::getline(vertexFile, line))
-			fileContents += line + "\n";
-
-		vertexFile.close();
-
-		const char* contentsPtr = fileContents.c_str();
+	void GLSLProgram::compileShader(const std::string& source, GLuint id) {
+		const char* contentsPtr = source.c_str();
 
 		glShaderSource(id, 1, &contentsPtr, nullptr);
 
@@ -143,9 +131,54 @@ namespace GameEngine2D {
 			glDeleteShader(id);
 
 			std::printf("%s\n", &(errorLog[0]));
-			fatalError("Vertex Shader " + filePath + " failed to compile");
+			fatalError("Shaders failed to compile");
 		}
 
+	}
+
+	void GLSLProgram::createShaders(const std::string & vertexShader, const std::string & fragmentShader)
+	{
+
+	}
+
+	ShaderProgramSource GLSLProgram::readShaderFile(const std::string& filePath)
+	{
+		std::ifstream shaderFile(filePath);
+
+		//Error check if shaders opened
+		if (shaderFile.fail()) {
+			perror(filePath.c_str());
+			fatalError("Failed to open " + filePath);
+		}
+
+		std::string line;
+		std::stringstream ss[2]; ///< String stream for vertex and fragment shader
+
+		enum class ShaderMode {
+			NONE = -1, VERTEX = 0, FRAGMENT = 1
+		};
+
+		ShaderMode shaderMode = ShaderMode::NONE;
+
+		while (std::getline(shaderFile, line)) { ///< Read the vertex and fragment shader from the shader file
+			if (line.find("#shader") != std::string::npos) { ///< Check if it is the beginning of the shader file
+				if (line.find("vertex") != std::string::npos) { ///< Check if it the vertex file, if so set to vertex mode
+					shaderMode = ShaderMode::VERTEX;
+				}
+				else if (line.find("fragment") != std::string::npos) { ///< Check if it the fragment file, if so set to fragment mode
+					shaderMode = ShaderMode::FRAGMENT;
+				}
+			}
+			else {
+				ss[int(shaderMode)] << line << "\n";
+			}
+
+		}
+
+		//Close the file
+		shaderFile.close();
+
+		return{ ss[0].str(), ss[1].str() };
 	}
 
 }

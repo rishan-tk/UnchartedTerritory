@@ -1,4 +1,5 @@
-#version 130
+#shader vertex
+#version 330
 
 //Input data from the vbo
 in vec2 vertexPosition;
@@ -30,5 +31,25 @@ void main(){
 	fragmentUV = vec2(vertexUV.x, 1 - vertexUV.y);
 }
 
+#shader fragment
+#version 330 
+//Fragment shader operates on each pixel in a given polygon
 
+in vec2 fragmentPosition;
+in vec4 fragmentColour;
+in vec2 fragmentUV;
 
+//This is a float vector that gets outputted to the 
+//screen for each pixel
+out vec4 colour;
+
+//A variable to hold the texture
+uniform sampler2D myTexture;
+
+void main(){
+
+	vec4 textureColour = texture(myTexture, fragmentUV);
+
+	colour = textureColour * fragmentColour;
+	
+}

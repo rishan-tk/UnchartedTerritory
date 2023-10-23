@@ -6,6 +6,11 @@
 //Include all the files in 2DGameEngine namespace
 namespace GameEngine2D {
 
+	struct ShaderProgramSource {
+		std::string VertexSource;
+		std::string FragmentSource;
+	};
+
 	class GLSLProgram
 	{
 	public:
@@ -13,7 +18,7 @@ namespace GameEngine2D {
 		~GLSLProgram();
 
 		//Read shaders from file and compile it
-		void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
+		void compileShaders(const std::string& shaderFilePath);
 
 		//Link the shaders
 		void linkShaders();
@@ -28,7 +33,9 @@ namespace GameEngine2D {
 
 	private:
 
-		void compileShader(const std::string& filePath, GLuint id);
+		void compileShader(const std::string& source, GLuint id);
+		void createShaders(const std::string& vertexShader, const std::string& fragmentShader);
+		ShaderProgramSource readShaderFile(const std::string& filePath);
 
 		//ID of the whole program
 		GLuint _programID;

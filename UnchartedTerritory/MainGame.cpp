@@ -65,7 +65,7 @@ void MainGame::initialiseLevel(int level){
 }
 
 void MainGame::initialiseShaders(){
-	_colourProgram.compileShaders("Shaders/colourShading.vert", "Shaders/colourShading.frag");
+	_colourProgram.compileShaders("Shaders/basic.shader");
 	_colourProgram.addAttribute("vertexPosition");
 	_colourProgram.addAttribute("vertexColour");
 	_colourProgram.addAttribute("vertexUV");
@@ -78,6 +78,7 @@ void MainGame::updateEntities(){
 		for (int j = 0; j < (int)_coins.size(); j++) {
 			if (_coins[j]->update(_bullets[i].getPosition())) { ///< Check if bullets are colliding with a coin
 				_coins[j] = _coins.back();
+				delete _coins.back();
 				_coins.pop_back();
 			}
 		}
@@ -93,6 +94,7 @@ void MainGame::updateEntities(){
 	for (int i = 0; i < (int)_coins.size(); i++) {
 		if (_coins[i]->update(_player[0]->getPosition())) {
 			_coins[i] = _coins.back();
+			delete _coins.back();
 			_coins.pop_back();
 		}
 	}
